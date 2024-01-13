@@ -34,6 +34,8 @@ public class FavorisService {
 
     public Favoris createFavoris(Favoris favoris) {
         try{
+            String idFavoris=favorisRepository.getNextValSequence();
+            favoris.setIdFavoris(idFavoris);
             return favorisRepository.save(favoris);
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
