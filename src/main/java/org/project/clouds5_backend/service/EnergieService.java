@@ -59,6 +59,7 @@ public class EnergieService {
         if(optionalEnergie.isPresent()){
             Energie energieToDelete = optionalEnergie.get();
             energieToDelete.setEtat(10);
+            energieRepository.save(energieToDelete);
             return energieToDelete;
         }else {
             throw new RuntimeException("Energie non trouvee");
