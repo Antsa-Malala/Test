@@ -51,6 +51,8 @@ public class VoitureService {
 
     public Voiture createVoiture(Voiture voiture) {
         try{
+            String idVoiture=voitureRepository.getNextValSequence();
+            voiture.setIdVoiture(idVoiture);
             return voitureRepository.save(voiture);
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -88,5 +90,10 @@ public class VoitureService {
         }else{
             throw new RuntimeException("Voiture non trouvee");
         }
+    }
+
+    public String getNextValSequence()
+    {
+        return voitureRepository.getNextValSequence();
     }
 }
