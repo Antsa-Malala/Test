@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface FavorisRepository extends JpaRepository<Favoris, String> {
 
-    @Query(value = "select 'FAV'||nextval('seq_favoris') as id;", nativeQuery = true)
+    @Query(value = "select 'FAV'||nextval('s_favoris') as id;", nativeQuery = true)
     String getNextValSequence();
 }
