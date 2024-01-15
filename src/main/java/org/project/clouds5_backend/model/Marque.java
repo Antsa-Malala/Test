@@ -10,7 +10,7 @@ public class Marque {
     @Column(name = "id_marque")
     private int idMarque;
     @NotBlank(message = "Le nom de la marque est obligatoire")
-    @Column(name = "nom_marque", nullable = false)
+    @Column(name = "nom_marque", nullable = false,length = 100)
     private String nomMarque;
     @Column(name = "etat_marque")
     private int etat;

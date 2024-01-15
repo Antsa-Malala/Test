@@ -10,7 +10,7 @@ public class Boite {
     @Column(name = "id_boite")
     private int idBoite;
     @NotBlank(message = "Le nom de la boite est obligatoire")
-    @Column(name = "nom_boite", nullable = false)
+    @Column(name = "nom_boite", nullable = false,length = 100)
     private String nomBoite;
     @Column(name = "etat_boite")
     private int etat;

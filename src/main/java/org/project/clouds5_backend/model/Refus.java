@@ -7,7 +7,7 @@ import java.sql.Date;
 @Entity
 public class Refus {
     @Id
-    @Column(name = "id_refus")
+    @Column(name = "id_refus",length = 10)
     private String idRefus;
     @Column(name = "date_refus", nullable = false)
     private Date dateRefus;

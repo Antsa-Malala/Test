@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Favoris {
     @Id
-    @Column(name = "id_favoris")
+    @Column(name = "id_favoris",length = 10)
     private String idFavoris;
     @ManyToOne
     @JoinColumn(name = "id_utilisateur", nullable = false)

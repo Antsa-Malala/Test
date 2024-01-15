@@ -21,7 +21,7 @@ public class PorteController {
     }
 
     @GetMapping
-    public ResponseEntity<Reponse<List<Porte>>> getAttPortes() {
+    public ResponseEntity<Reponse<List<Porte>>> getAllPortes() {
         Reponse<List<Porte>> reponse = new Reponse<>();
         try {
             List<Porte> portes = porteService.getAllPortes();

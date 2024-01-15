@@ -7,7 +7,7 @@ import java.sql.Date;
 @Entity
 public class Vente {
     @Id
-    @Column(name = "id_vente")
+    @Column(name = "id_vente",length=10)
     private String idVente;
     @ManyToOne
     @JoinColumn(name = "id_annonce", nullable = false)

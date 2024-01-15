@@ -22,10 +22,10 @@ public class Utilisateur implements UserDetails {
     @Id
     @Column(name = "id_utilisateur", length = 10)
     private String idUtilisateur;
-    @Column(name = "prenom",length=100)
+    @Column(name = "prenom")
     @NotBlank(message = "Le prenom est obligatoire")
     private String prenom;
-    @Column(name = "nom",length=100)
+    @Column(name = "nom")
     @NotBlank(message = "Le nom est obligatoire")
     private String nom;
     @ManyToOne
@@ -33,15 +33,14 @@ public class Utilisateur implements UserDetails {
     @NotNull(message = "La ville est obligatoire")
     private Ville ville;
     @NotBlank(message = "L'adresse est obligatoire")
-    @Column(length=100)
     private String adresse;
     @NotBlank(message = "Le contact est obligatoire")
     @Column(length=20)
     private String contact;
-    @Column(name = "mail",length=150)
+    @Column(name = "mail")
     @NotBlank(message = "L'email est obligatoire")
     private String mail;
-    @Column(name = "mot_de_passe", nullable = false,length = 150)
+    @Column(name = "mot_de_passe", nullable = false)
     @NotBlank(message = "Le mot de passe est obligatoire")
     private String motDePasse;
     private int role;

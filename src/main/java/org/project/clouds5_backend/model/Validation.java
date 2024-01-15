@@ -7,7 +7,7 @@ import java.sql.Date;
 @Entity
 public class Validation {
     @Id
-    @Column(name = "id_validation")
+    @Column(name = "id_validation",length = 10)
     private String idValidation;
     @Column(name = "date_validation", nullable = false)
     private Date dateValidation;

@@ -10,7 +10,7 @@ public class Energie {
     @Column(name = "id_energie")
     private int idEnergie;
     @NotBlank(message = "Le nom de l'energie est obligatoire")
-    @Column(name = "nom_energie", nullable = false)
+    @Column(name = "nom_energie", nullable = false,length = 100)
     private String nomEnergie;
     @Column(name = "etat_energie")
     private int etat;

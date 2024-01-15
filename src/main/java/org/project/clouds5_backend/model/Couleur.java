@@ -10,7 +10,7 @@ public class Couleur {
     @Column(name = "id_couleur")
     private int idCouleur;
     @NotBlank(message = "Le nom de la couleur est obligatoire")
-    @Column(name = "nom_couleur", nullable = false)
+    @Column(name = "nom_couleur", nullable = false,length = 100)
     private String nomCouleur;
     @Column(name = "etat_couleur")
     private int etat;

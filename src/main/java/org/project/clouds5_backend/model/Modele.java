@@ -10,7 +10,7 @@ public class Modele {
     @Column(name = "id_modele")
     private int idModele;
     @NotBlank(message = "Le nom du modele est obligatoire")
-    @Column(name = "nom_modele", nullable = false)
+    @Column(name = "nom_modele", nullable = false,length = 200)
     private String nomModele;
     @ManyToOne
     @JoinColumn(name = "id_marque", nullable = false)
