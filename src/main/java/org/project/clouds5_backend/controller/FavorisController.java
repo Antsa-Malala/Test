@@ -1,9 +1,13 @@
 package org.project.clouds5_backend.controller;
 
 import jakarta.validation.Valid;
+
+import org.project.clouds5_backend.model.Annonce;
+import org.project.clouds5_backend.model.Utilisateur;
 import org.project.clouds5_backend.model.Favoris;
 import org.project.clouds5_backend.model.Reponse;
 import org.project.clouds5_backend.service.FavorisService;
+import org.project.clouds5_backend.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +18,12 @@ import java.util.List;
 @RequestMapping("favoris")
 public class FavorisController {
     private final FavorisService favorisService;
+    private final UtilisateurService utilisateurService;
 
     @Autowired
-    public FavorisController(FavorisService favorisService) {
+    public FavorisController(FavorisService favorisService, UtilisateurService utilisateurService) {
         this.favorisService = favorisService;
+        this.utilisateurService = utilisateurService;
     }
 
     @GetMapping
@@ -114,5 +120,30 @@ public class FavorisController {
             return ResponseEntity.status(500).body(reponse);
         }
 
+    }
+
+    @GetMapping("/favoris/{id}")
+    public ResponseEntity<Reponse<List<Favoris>>> getFavorisByUser(@PathVariable String id) {
+        Reponse<List<Favoris>> reponse = new Reponse<>();
+        try {
+            Utilisateur utilisateur = utilisateurService.getUtilisateurById(id);
+            if(utilisateur != null){
+                List<Favoris> result = favorisService.getFavorisByUser(utilisateur);
+                if (result != null) {
+                    reponse.setData(result);
+                    reponse.setRemarque("Favoris de l'utilisateur trouvee");
+                    return ResponseEntity.status(201).body(reponse);
+                } else {
+                    reponse.setErreur("Erreur sur la liste des favoris par utilisateur");
+                    return ResponseEntity.status(400).body(reponse);
+                }
+            }else  {
+                reponse.setErreur("User not found");
+                return ResponseEntity.status(400).body(reponse);
+            }
+        } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
     }
 }

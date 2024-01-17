@@ -1,6 +1,7 @@
 package org.project.clouds5_backend.controller;
 
 import jakarta.validation.Valid;
+import org.project.clouds5_backend.model.Marque;
 import org.project.clouds5_backend.model.Modele;
 import org.project.clouds5_backend.model.Reponse;
 import org.project.clouds5_backend.service.ModeleService;
@@ -19,6 +20,70 @@ public class ModeleController {
     public ModeleController(ModeleService modeleService) {
         this.modeleService = modeleService;
     }
+
+    @GetMapping("/modeleCategorieMarque/{id_categorie}/{id_marque}")
+    public ResponseEntity<Reponse<List<Modele>>> getByCategorieMarque(@PathVariable Integer id_categorie, @PathVariable Integer id_marque) {
+        Reponse<List<Modele>> valiny = new Reponse<List<Modele>>();
+        try {
+            List<Modele> data=modeleService.getByCategorieMarque(id_categorie, id_marque);
+            if(data!=null)
+            {
+                valiny.setData(data);
+                valiny.setRemarque("Modele par categorie par marque trouvee");
+                return ResponseEntity.ok().body(valiny);
+            }
+            else{
+                valiny.setErreur("Liste modele vide");
+                return ResponseEntity.status(404).body(valiny);
+            }
+        } catch (Exception e) {
+            valiny.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(valiny);
+        }
+    }
+
+    @GetMapping("/modeleCategorie/{id}")
+    public ResponseEntity<Reponse<List<Modele>>> getByCategorie(@PathVariable Integer id) {
+        Reponse<List<Modele>> valiny = new Reponse<List<Modele>>();
+        try {
+            List<Modele> data=modeleService.getByCategorie(id);
+            if(data!=null)
+            {
+                valiny.setData(data);
+                valiny.setRemarque("Modele par categorie trouvee");
+                return ResponseEntity.ok().body(valiny);
+            }
+            else{
+                valiny.setErreur("Liste modele vide");
+                return ResponseEntity.status(404).body(valiny);
+            }
+        } catch (Exception e) {
+            valiny.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(valiny);
+        }
+    }
+
+    @GetMapping("/modeleMarque/{id}")
+    public ResponseEntity<Reponse<List<Modele>>> getByMarque(@PathVariable Integer id) {
+        Reponse<List<Modele>> valiny = new Reponse<List<Modele>>();
+        try {
+            List<Modele> data=modeleService.getByMarque(id);
+            if(data!=null)
+            {
+                valiny.setData(data);
+                valiny.setRemarque("Modele par marque trouvee");
+                return ResponseEntity.ok().body(valiny);
+            }
+            else{
+                valiny.setErreur("Liste modele vide");
+                return ResponseEntity.status(404).body(valiny);
+            }
+        } catch (Exception e) {
+            valiny.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(valiny);
+        }
+    }
+
 
     @GetMapping
     public ResponseEntity<Reponse<List<Modele>>> getAllModeles() {

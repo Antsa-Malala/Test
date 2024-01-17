@@ -8,10 +8,10 @@ public class Favoris {
     @Column(name = "id_favoris",length = 10)
     private String idFavoris;
     @ManyToOne
-    @JoinColumn(name = "id_utilisateur", nullable = false)
+    @JoinColumn(name = "id_utilisateur", nullable = false,referencedColumnName = "id_utilisateur")
     private Utilisateur utilisateur;
     @ManyToOne
-    @JoinColumn(name = "id_annonce", nullable = false)
+    @JoinColumn(name = "id_annonce", nullable = false,referencedColumnName = "id_annonce")
     private Annonce annonce;
 
     public String getIdFavoris() {

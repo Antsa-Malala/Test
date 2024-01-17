@@ -1,12 +1,13 @@
 package org.project.clouds5_backend.service;
 
 import org.project.clouds5_backend.model.Favoris;
+import org.project.clouds5_backend.model.Annonce;
 import org.project.clouds5_backend.repository.FavorisRepository;
 import org.springframework.stereotype.Service;
-
+import org.project.clouds5_backend.model.Utilisateur;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.Optional;
 @Service
 public class FavorisService {
     private final FavorisRepository favorisRepository;
@@ -62,5 +63,9 @@ public class FavorisService {
         }else{
             throw new RuntimeException("Favoris non trouvee");
         }
+    }
+
+    public List<Favoris> getFavorisByUser(Utilisateur utilisateur){
+        return favorisRepository.findByUtilisateur(utilisateur);
     }
 }

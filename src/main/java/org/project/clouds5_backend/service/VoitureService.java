@@ -2,6 +2,7 @@ package org.project.clouds5_backend.service;
 
 import org.project.clouds5_backend.model.Voiture;
 import org.project.clouds5_backend.repository.*;
+import org.project.clouds5_backend.model.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,9 @@ public class VoitureService {
     private final BoiteRepository boiteRepository;
     private final PorteRepository porteRepository;
     private final CouleurRepository couleurRepository;
+    public final PlaceRepository placeRepository;
 
-    public VoitureService(VoitureRepository voitureRepository, CategorieRepository categorieRepository, MarqueRepository marqueRepository, ModeleRepository modeleRepository, EnergieRepository energieRepository, BoiteRepository boiteRepository, PorteRepository porteRepository, CouleurRepository couleurRepository) {
+    public VoitureService(VoitureRepository voitureRepository, CategorieRepository categorieRepository, MarqueRepository marqueRepository, ModeleRepository modeleRepository, EnergieRepository energieRepository, BoiteRepository boiteRepository, PorteRepository porteRepository, CouleurRepository couleurRepository,PlaceRepository placeRepository) {
         this.voitureRepository = voitureRepository;
         this.categorieRepository = categorieRepository;
         this.marqueRepository = marqueRepository;
@@ -29,6 +31,7 @@ public class VoitureService {
         this.boiteRepository = boiteRepository;
         this.porteRepository = porteRepository;
         this.couleurRepository = couleurRepository;
+        this.placeRepository = placeRepository;
     }
 
     public List<Voiture> getAllVoitures() {
@@ -53,6 +56,13 @@ public class VoitureService {
         try{
             String idVoiture=voitureRepository.getNextValSequence();
             voiture.setIdVoiture(idVoiture);
+            Place place = placeRepository.findByValeur(voiture.getNbplace());
+            if(place == null){
+                Place new_place = new Place();
+                new_place.setValeur(voiture.getNbplace());
+                new_place.setEtat(0);
+                placeRepository.save(place);
+            }
             return voitureRepository.save(voiture);
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());

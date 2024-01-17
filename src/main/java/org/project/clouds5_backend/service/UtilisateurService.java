@@ -13,7 +13,8 @@ import org.project.clouds5_backend.repository.UtilisateurRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
+import org.project.clouds5_backend.model.Annonce;
+import org.project.clouds5_backend.repository.UtilisateurRepository;
 @Service
 public class UtilisateurService implements UtilisateurServiceInter {
     private final UtilisateurRepository utilisateurRepository;

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UtilisateurRepository extends JpaRepository<Utilisateur, Integer> {
+public interface UtilisateurRepository extends JpaRepository<Utilisateur, String> {
     Optional<Utilisateur> findByMail(String email);
 
     List<Utilisateur> findByEtatNot(Integer etat);

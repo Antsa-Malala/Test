@@ -28,6 +28,8 @@ public class Place {
         return valeur;
     }
 
+    public String getNomPlace(){ return valeur+" places"; }
+
     public void setValeur(int valeur) {
         this.valeur = valeur;
     }

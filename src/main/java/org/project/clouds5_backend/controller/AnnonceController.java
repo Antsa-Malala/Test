@@ -8,7 +8,13 @@ import org.project.clouds5_backend.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.project.clouds5_backend.model.Annonce;
+import org.project.clouds5_backend.model.Reponse;
+import org.project.clouds5_backend.model.Utilisateur;
+import org.project.clouds5_backend.service.AnnonceService;
+import org.project.clouds5_backend.service.UtilisateurService;
 
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -17,11 +23,39 @@ public class AnnonceController {
     private final AnnonceService annonceService;
 
     private final ValidationService validationService;
+    private  final UtilisateurService utilisateurService;
 
     @Autowired
-    public AnnonceController(AnnonceService annonceService,ValidationService validationService) {
+    public AnnonceController(AnnonceService annonceService,ValidationService validationService,UtilisateurService utilisateurService) {
         this.annonceService = annonceService;
         this.validationService = validationService;
+        this.utilisateurService = utilisateurService;
+    }
+
+
+    @GetMapping("/utilisateur/{id}")
+    public ResponseEntity<Reponse<List<Annonce>>> getAnnonceByUser(@PathVariable String id) {
+        Reponse<List<Annonce>> reponse = new Reponse<>();
+        try {
+            Utilisateur utilisateur = utilisateurService.getUtilisateurById(id);
+            if(utilisateur != null){
+                List<Annonce> result = annonceService.getHistoriqueByUser(utilisateur);
+                if (result != null) {
+                    reponse.setData(result);
+
+                    return ResponseEntity.status(201).body(reponse);
+                } else {
+                    reponse.setErreur("Erreur sur la liste des annonces par utilisateur");
+                    return ResponseEntity.status(400).body(reponse);
+                }
+            }else  {
+                reponse.setErreur("User not found");
+                return ResponseEntity.status(400).body(reponse);
+            }
+        } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
     }
 
     @GetMapping
@@ -210,6 +244,45 @@ public class AnnonceController {
                 return ResponseEntity.status(404).body(reponse);
             }
         } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Reponse<List<Annonce>>> searchAnnonce(
+            @RequestParam(required = false) String motCle,
+            @RequestParam(required = false) Date dateDebut,
+            @RequestParam(required = false) Date dateFin,
+            @RequestParam(required = false) Double prixMin,
+            @RequestParam(required = false) Double prixMax,
+            @RequestParam(required = false) Integer idCategorie,
+            @RequestParam(required = false) Integer idMarque,
+            @RequestParam(required = false) Integer idModel,
+            @RequestParam(required = false) Integer idBoite,
+            @RequestParam(required = false) Integer idEnergie,
+            @RequestParam(required = false) Integer nbPlace,
+            @RequestParam(required = false) Integer idPorte,
+            @RequestParam(required = false) Integer idCouleur,
+            @RequestParam(required = false) Integer idVille,
+            @RequestParam(required = false) String idUtilisateur,
+            @RequestParam(required = false) Double kilometrageMin,
+            @RequestParam(required = false) Double kilometrageMax,
+            @RequestParam(required = false) Double consommationMin,
+            @RequestParam(required = false) Double consommationMax
+    ) {
+        Reponse<List<Annonce>> reponse = new Reponse<>();
+        try{
+            List<Annonce> annonces = annonceService.rechercheAvancee(motCle, dateDebut, dateFin, prixMin, prixMax, idCategorie, idMarque, idModel, idBoite, idEnergie, nbPlace, idPorte, idCouleur, idVille, idUtilisateur, kilometrageMin, kilometrageMax, consommationMin, consommationMax);
+            if(!annonces.isEmpty()){
+                reponse.setData(annonces);
+                reponse.setRemarque("Annonces trouvees");
+                return ResponseEntity.ok().body(reponse);
+            }else{
+                reponse.setErreur("Aucune annonce trouvee");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        }catch (Exception e) {
             reponse.setErreur(e.getMessage());
             return ResponseEntity.status(500).body(reponse);
         }

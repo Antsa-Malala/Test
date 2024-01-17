@@ -26,6 +26,15 @@ public class PlaceService {
         }
     }
 
+    public List<Place> getSuggestion(String insere) {
+        List<Place> places = placeRepository.findSuggestion(insere);
+        if (places.isEmpty()) {
+            return Collections.emptyList();
+        }else {
+            return places;
+        }
+    }
+
     public Place getPlaceById(Integer id) {
         Place place = placeRepository.findByIdPlaceAndEtatNot(id, 10);
         if(place == null) {

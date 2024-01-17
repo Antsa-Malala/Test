@@ -13,10 +13,10 @@ public class Modele {
     @Column(name = "nom_modele", nullable = false,length = 200)
     private String nomModele;
     @ManyToOne
-    @JoinColumn(name = "id_marque", nullable = false)
+    @JoinColumn(name = "id_marque", nullable = false,referencedColumnName = "id_marque")
     private Marque marque;
     @ManyToOne
-    @JoinColumn(name = "id_categorie", nullable = false)
+    @JoinColumn(name = "id_categorie", nullable = false,referencedColumnName = "id_categorie")
     private Categorie categorie;
     @Column(name = "etat_modele")
     private int etat;

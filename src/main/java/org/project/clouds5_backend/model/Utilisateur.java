@@ -29,7 +29,7 @@ public class Utilisateur implements UserDetails {
     @NotBlank(message = "Le nom est obligatoire")
     private String nom;
     @ManyToOne
-    @JoinColumn(name = "id_ville", nullable = false)
+    @JoinColumn(name = "id_ville", nullable = false,referencedColumnName = "id_ville")
     @NotNull(message = "La ville est obligatoire")
     private Ville ville;
     @NotBlank(message = "L'adresse est obligatoire")
@@ -196,6 +196,5 @@ public class Utilisateur implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 }

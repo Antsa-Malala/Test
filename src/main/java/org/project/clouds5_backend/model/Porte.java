@@ -27,6 +27,13 @@ public class Porte {
     public int getValeur() {
         return valeur;
     }
+    public String getNomPorte() {
+        if (valeur <= 1) {
+            return valeur + " porte";
+        } else {
+            return valeur + " portes";
+        }
+    }
 
     public void setValeur(int valeur) {
         this.valeur = valeur;

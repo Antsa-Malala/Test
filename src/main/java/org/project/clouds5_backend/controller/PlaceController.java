@@ -39,6 +39,25 @@ public class PlaceController {
         }
     }
 
+    @GetMapping("suggestion")
+    public ResponseEntity<Reponse<List<Place>>> getSuggestion(@RequestParam String insere) {
+        Reponse<List<Place>> reponse = new Reponse<>();
+        try {
+            List<Place> places = placeService.getSuggestion(insere);
+            if (!places.isEmpty()) {
+                reponse.setData(places);
+                reponse.setRemarque("Liste des places similaires");
+                return ResponseEntity.ok().body(reponse);
+            } else {
+                reponse.setErreur("Liste vide");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        }catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Reponse<Place>> getPlaceById(@PathVariable Integer id) {
         Reponse<Place> reponse = new Reponse<>();
@@ -115,5 +134,7 @@ public class PlaceController {
         }
 
     }
+
+
 
 }
