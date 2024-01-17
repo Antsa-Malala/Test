@@ -1,9 +1,9 @@
 package org.project.clouds5_backend.service;
 
 import org.project.clouds5_backend.model.Commission;
-import org.project.clouds5_backend.model.Favoris;
+import org.project.clouds5_backend.model.Statistique;
 import org.project.clouds5_backend.repository.CommissionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -13,9 +13,11 @@ import java.util.Optional;
 @Service
 public class CommissionService {
     private final CommissionRepository commissionRepository;
+    private final JdbcTemplate jdbcTemplate;
 
-    public CommissionService(CommissionRepository commissionRepository) {
+    public CommissionService(CommissionRepository commissionRepository, JdbcTemplate jdbcTemplate) {
         this.commissionRepository = commissionRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Commission> getAllCommissions() {
@@ -64,5 +66,15 @@ public class CommissionService {
         }else{
             throw new RuntimeException("Favoris non trouvee");
         }
+    }
+
+    public Statistique getCommissionByMois(int mois, int annee) {
+        String sql = "select * from v_CommissionByMois where mois = ? and annee = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
+            Statistique statistique = new Statistique();
+            statistique.setLibelle("Commission du mois " + mois + " de l'année " + annee);
+            statistique.setNombre(resultSet.getDouble("montant"));
+            return statistique;
+        }, mois, annee);
     }
 }

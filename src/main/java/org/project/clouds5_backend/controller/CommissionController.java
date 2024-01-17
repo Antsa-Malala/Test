@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.project.clouds5_backend.model.Categorie;
 import org.project.clouds5_backend.model.Commission;
 import org.project.clouds5_backend.model.Reponse;
+import org.project.clouds5_backend.model.Statistique;
 import org.project.clouds5_backend.repository.CategorieRepository;
 import org.project.clouds5_backend.service.CategorieService;
 import org.project.clouds5_backend.service.CommissionService;
@@ -116,6 +117,20 @@ public class CommissionController {
         }catch (Exception e) {
             reponse.setErreur(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(reponse);
+        }
+    }
+
+    @GetMapping("/commissionByMois")
+    public ResponseEntity<Reponse<Statistique>> getCommissionByMois(@RequestParam("mois") int mois, @RequestParam("annee") int annee) {
+        Reponse<Statistique> reponse = new Reponse<>();
+        try{
+            Statistique statistique = commissionService.getCommissionByMois(mois, annee);
+            reponse.setData(statistique);
+            reponse.setRemarque("Commission du mois " + mois + " de l'année " + annee);
+            return ResponseEntity.ok().body(reponse);
+        }catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
         }
     }
 }
