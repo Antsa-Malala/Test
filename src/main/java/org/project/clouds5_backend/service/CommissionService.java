@@ -68,13 +68,14 @@ public class CommissionService {
         }
     }
 
-    public Statistique getCommissionByMois(int mois, int annee) {
-        String sql = "select * from v_CommissionByMois where mois = ? and annee = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
+    public List<Statistique> getCommissionByMois() {
+        String sql = "select * from v_CommissionByMois";
+        return jdbcTemplate.query(sql, (resultSet, i) -> {
             Statistique statistique = new Statistique();
-            statistique.setLibelle("Commission du mois " + mois + " de l'année " + annee);
+            statistique.setLibelle("Commission du mois " + resultSet.getInt("mois") + " de l'année " + resultSet.getInt("annee"));
             statistique.setNombre(resultSet.getDouble("montant"));
             return statistique;
-        }, mois, annee);
+        });
     }
+
 }

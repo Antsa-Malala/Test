@@ -121,13 +121,18 @@ public class CommissionController {
     }
 
     @GetMapping("/commissionByMois")
-    public ResponseEntity<Reponse<Statistique>> getCommissionByMois(@RequestParam("mois") int mois, @RequestParam("annee") int annee) {
-        Reponse<Statistique> reponse = new Reponse<>();
+    public ResponseEntity<Reponse<List<Statistique>>> getCommissionByMois() {
+        Reponse<List<Statistique>> reponse = new Reponse<>();
         try{
-            Statistique statistique = commissionService.getCommissionByMois(mois, annee);
-            reponse.setData(statistique);
-            reponse.setRemarque("Commission du mois " + mois + " de l'année " + annee);
-            return ResponseEntity.ok().body(reponse);
+            List<Statistique> statistique = commissionService.getCommissionByMois();
+            if (!statistique.isEmpty()) {
+                reponse.setData(statistique);
+                reponse.setRemarque("Commission");
+                return ResponseEntity.ok().body(reponse);
+            }else {
+                reponse.setErreur("Aucune commission");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(reponse);
+            }
         }catch (Exception e) {
             reponse.setErreur(e.getMessage());
             return ResponseEntity.status(500).body(reponse);
