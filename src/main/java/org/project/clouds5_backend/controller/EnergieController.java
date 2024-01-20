@@ -66,7 +66,7 @@ public class EnergieController {
             if (newEnergie != null) {
                 reponse.setData(newEnergie);
                 reponse.setRemarque("Energie creee");
-                return ResponseEntity.ok().body(reponse);
+                return ResponseEntity.status(201).body(reponse);
             } else {
                 reponse.setErreur("Energie non creee");
                 return ResponseEntity.status(400).body(reponse);
