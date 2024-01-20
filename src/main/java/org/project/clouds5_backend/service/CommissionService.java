@@ -6,8 +6,10 @@ import org.project.clouds5_backend.repository.CommissionRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormatSymbols;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -72,10 +74,26 @@ public class CommissionService {
         String sql = "select * from v_CommissionByMois";
         return jdbcTemplate.query(sql, (resultSet, i) -> {
             Statistique statistique = new Statistique();
-            statistique.setLibelle("Commission du mois " + resultSet.getInt("mois") + " de l'année " + resultSet.getInt("annee"));
+            int indiceMois = resultSet.getInt("mois");
+
+            String nomMois = convertirMoisEnLettres(indiceMois);
+            statistique.setLibelle(nomMois+"-"+ resultSet.getInt("annee"));
             statistique.setNombre(resultSet.getDouble("montant"));
             return statistique;
         });
+    }
+
+    public static String convertirMoisEnLettres(int indiceMois) {
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.FRENCH);
+        String[] nomsMois = symbols.getMonths();
+
+        int indiceAjuste = indiceMois - 1;
+
+        if (indiceAjuste >= 0 && indiceAjuste < nomsMois.length) {
+            return nomsMois[indiceAjuste];
+        } else {
+            return "Mois inconnu";
+        }
     }
 
 }
