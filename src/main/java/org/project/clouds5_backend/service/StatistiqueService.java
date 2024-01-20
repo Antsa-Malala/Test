@@ -67,6 +67,16 @@ public class StatistiqueService {
          });
     }
 
+    public List<Statistique> getVenduByMarque() {
+        String sql = "select * from v_VenduParMarque";
+        return jdbcTemplate.query(sql, (resultSet, i) -> {
+            Statistique statistique = new Statistique();
+            statistique.setLibelle(resultSet.getString("nom_marque"));
+            statistique.setNombre(resultSet.getDouble("nb_annonce"));
+            return statistique;
+        });
+    }
+
 
     public Statistique getBeneficeByMois(int mois, int annee) {
         String sql = "select * from v_BeneficeByMois where mois = ? and annee = ?";

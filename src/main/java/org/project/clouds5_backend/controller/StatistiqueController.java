@@ -95,6 +95,25 @@ public class StatistiqueController {
         }
     }
 
+    @GetMapping("/venduByMarque")
+    public ResponseEntity<Reponse<List<Statistique>>> getVenduByMarque() {
+        Reponse<List<Statistique>> reponse = new Reponse<>();
+        try{
+            List<Statistique> statistique = statistiqueService.getVenduByMarque();
+            if (!statistique.isEmpty()) {
+                reponse.setData(statistique);
+                reponse.setRemarque("Nombre de vendues par marque");
+                return ResponseEntity.ok().body(reponse);
+            }else {
+                reponse.setErreur("Aucun vendu");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(reponse);
+            }
+        }catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
     @GetMapping("/beneficeByMois")
     public ResponseEntity<Reponse<Statistique>> getBeneficeByMois(@RequestParam("mois") int mois,@RequestParam("annee") int annee) {
         Reponse<Statistique> reponse = new Reponse<>();
