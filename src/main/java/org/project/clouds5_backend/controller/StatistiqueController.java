@@ -4,8 +4,11 @@ import org.project.clouds5_backend.model.Reponse;
 import org.project.clouds5_backend.model.Statistique;
 import org.project.clouds5_backend.service.StatistiqueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("statistiques")
@@ -46,13 +49,18 @@ public class StatistiqueController {
     }
 
     @GetMapping("/annonceByMarque")
-    public ResponseEntity<Reponse<Statistique>> getAnnonceByMarque(@RequestParam("marque") String marque) {
-        Reponse<Statistique> reponse = new Reponse<>();
+    public ResponseEntity<Reponse<List<Statistique>>> getAnnonceByMarque() {
+        Reponse<List<Statistique>> reponse = new Reponse<>();
         try{
-            Statistique statistique = statistiqueService.getAnnonceByMarque(marque);
-            reponse.setData(statistique);
-            reponse.setRemarque("Nombre d'annonces de la marque " + marque);
-            return ResponseEntity.ok().body(reponse);
+            List<Statistique> statistique = statistiqueService.getAnnonceByMarque();
+            if (!statistique.isEmpty()) {
+                reponse.setData(statistique);
+                reponse.setRemarque("Nombre d'annonces par marque");
+                return ResponseEntity.ok().body(reponse);
+            }else {
+                reponse.setErreur("Marque inexistante");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(reponse);
+            }
         }catch (Exception e) {
             reponse.setErreur(e.getMessage());
             return ResponseEntity.status(500).body(reponse);

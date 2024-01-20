@@ -5,6 +5,8 @@ import org.project.clouds5_backend.repository.StatistiqueRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StatistiqueService {
     private final StatistiqueRepository statistiqueRepository;
@@ -35,15 +37,16 @@ public class StatistiqueService {
         }, prix1, prix2);
     }
 
-    public Statistique getAnnonceByMarque(String marque) {
-       String sql = "select nb_annonce from v_AnnonceByMarque where nom_marque ilike ?";
-         return jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
+    public List<Statistique> getAnnonceByMarque() {
+       String sql = "select * from v_AnnonceByMarque";
+         return jdbcTemplate.query(sql, (resultSet, i) -> {
               Statistique statistique = new Statistique();
-              statistique.setLibelle("Nombre d'annonce de la marque " + marque);
+              statistique.setLibelle(resultSet.getString("nom_marque"));
               statistique.setNombre(resultSet.getDouble("nb_annonce"));
               return statistique;
-         }, marque);
+         });
     }
+
 
     public Statistique getBeneficeByMois(int mois, int annee) {
         String sql = "select * from v_BeneficeByMois where mois = ? and annee = ?";
