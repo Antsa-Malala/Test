@@ -34,6 +34,20 @@ public class StatistiqueController {
         }
     }
 
+    @GetMapping("/nbPubliees")
+    public ResponseEntity<Reponse<Statistique>> getNbPubliees() {
+        Reponse<Statistique> reponse = new Reponse<>();
+        try{
+            Statistique statistique = statistiqueService.getNbPublie();
+            reponse.setData(statistique);
+            reponse.setRemarque("Nombre d'annonces publiees");
+            return ResponseEntity.ok().body(reponse);
+        }catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
     @GetMapping("/venduByPrix")
     public ResponseEntity<Reponse<Statistique>> getVenduByPrix(@RequestParam("prix1") double prix1,@RequestParam("prix2") double prix2) {
         Reponse<Statistique> reponse = new Reponse<>();

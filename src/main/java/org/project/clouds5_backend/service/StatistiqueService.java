@@ -27,6 +27,16 @@ public class StatistiqueService {
         });
     }
 
+    public Statistique getNbPublie() {
+        String sql = "select * from v_NbPubliee";
+        return jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
+            Statistique statistique = new Statistique();
+            statistique.setLibelle("Nombre d'annonces publiées");
+            statistique.setNombre(resultSet.getDouble("nb_publiee"));
+            return statistique;
+        });
+    }
+
     public Statistique getVenduByPrix(double prix1, double prix2) {
         String sql = "select count(*) as nb_produit from v_VenduByPrix where prix between ? and ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, i) -> {
