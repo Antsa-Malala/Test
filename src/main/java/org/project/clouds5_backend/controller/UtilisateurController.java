@@ -114,4 +114,25 @@ public class UtilisateurController {
             return ResponseEntity.status(500).body(reponse);
         }
     }
+
+    @GetMapping("/connecte")
+    public ResponseEntity<Reponse<Utilisateur>> getConnected() {
+        Reponse<Utilisateur> reponse = new Reponse<>();
+        try{
+            Utilisateur utilisateurDeleted = utilisateurService.getConnected();
+            if(utilisateurDeleted != null){
+                reponse.setData(utilisateurDeleted);
+                reponse.setRemarque("Utilisateur connecte trouvee");
+                return ResponseEntity.ok().body(reponse);
+            }else{
+                reponse.setErreur("Aucun utilisateur connecté trouve");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        }catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
+
 }
