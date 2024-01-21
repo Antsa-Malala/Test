@@ -36,12 +36,12 @@ public class InboxService {
 
     public Inbox saveLastMessage(Message message){
         Inbox last = inboxRepository.ourLastMessage(message.getIdUtilisateur1(), message.getIdUtilisateur2());
-        System.out.println("THe messages is " + last.getLastMessage() + " with id " + last.getId());
+        System.out.println("THe messages is ");
         if(last != null){
             Inbox inbox = inboxRepository.deleteInbox(message.getIdUtilisateur1(), message.getIdUtilisateur2());
             last.setDateMessage(message.getDateMessage());
             last.setLastMessage(message.getContenu());
-            inboxRepository.save(last); // USE FIND AND REPLACE HERE
+            inboxRepository.save(last);
 
         } else {
             last = new Inbox();
