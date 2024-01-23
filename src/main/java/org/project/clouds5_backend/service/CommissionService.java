@@ -66,7 +66,7 @@ public class CommissionService {
             commissionRepository.delete(commissionToDelete);
             return commissionToDelete;
         }else{
-            throw new RuntimeException("Favoris non trouvee");
+            throw new RuntimeException("Commission non trouvee");
         }
     }
 

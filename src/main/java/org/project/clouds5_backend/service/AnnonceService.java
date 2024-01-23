@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.project.clouds5_backend.model.*;
 import org.project.clouds5_backend.repository.AnnonceRepository;
+import org.project.clouds5_backend.service.PourcentageService;
 import org.project.clouds5_backend.repository.ValidationRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,20 @@ public class AnnonceService {
     private final ValidationService validationService;
     private final RefusService refusService;
     private final VenteService venteService;
+    private final CommissionService commissionService;
 
-    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService) {
+    private final PourcentageService pourcentageService;
+
+
+    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService,PourcentageService pourcentageService,CommissionService commissionService) {
         this.annonceRepository = annonceRepository;
         this.utilisateurService =utilisateurService;
         this.validationService =validationService;
         this.refusService =refusService;
         this.venteService=venteService;
+        this.pourcentageService=pourcentageService;
+        this.commissionService=commissionService;
+
     }
 
     public List<Annonce> getAllAnnonces() {
@@ -167,6 +175,10 @@ public class AnnonceService {
             Utilisateur connecte=utilisateurService.getConnected();
             Vente a=new Vente(idVente,annonceToUpdate,new Date(System.currentTimeMillis()));
             venteService.createVente(a);
+            double valeur=pourcentageService.getValeur();
+            double montant=valeur*annonceToUpdate.getPrix()/100;
+            Commission c=new Commission(annonceToUpdate,new Date(System.currentTimeMillis()),montant);
+            commissionService.createCommission(c);
             annonceRepository.save(annonceToUpdate);
             return annonceToUpdate;
         } else {
