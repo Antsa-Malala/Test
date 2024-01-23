@@ -133,6 +133,24 @@ public class AnnonceController {
             return ResponseEntity.status(500).body(reponse);
         }
     }
+    @GetMapping("/front/{id}")
+    public ResponseEntity<Reponse<Annonce>> getAnnonceByIdFront(@PathVariable String id) {
+        Reponse<Annonce> reponse = new Reponse<>();
+        try {
+            Annonce annonce = annonceService.getAnnonceByIdFront(id);
+            if (annonce != null) {
+                reponse.setData(annonce);
+                reponse.setRemarque("Annonce trouvee");
+                return ResponseEntity.ok().body(reponse);
+            } else {
+                reponse.setErreur("Annonce non trouvee");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
 
     @PostMapping
     public ResponseEntity<Reponse<Annonce>> createAnnonce(@RequestBody Annonce annonce) {

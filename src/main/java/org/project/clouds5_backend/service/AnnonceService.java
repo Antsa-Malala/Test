@@ -88,6 +88,15 @@ public class AnnonceService {
             return annonce;
         }
     }
+    public Annonce getAnnonceByIdFront(String id) {
+        Annonce annonce = annonceRepository.findByIdAnnonceAndEtatNot(id, 10);
+        if (annonce == null) {
+            return null;
+        } else {
+            annonce.setUtilisateur(null);
+            return annonce;
+        }
+    }
 
     public Annonce createAnnonce(Annonce annonce) {
         try {
