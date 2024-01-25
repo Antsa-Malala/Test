@@ -27,12 +27,13 @@ public class AnnonceService {
     private final ValidationService validationService;
     private final RefusService refusService;
     private final VenteService venteService;
+    private final VoitureService voitureService;
     private final CommissionService commissionService;
 
     private final PourcentageService pourcentageService;
 
 
-    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService,PourcentageService pourcentageService,CommissionService commissionService) {
+    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService,PourcentageService pourcentageService,CommissionService commissionService,VoitureService voitureService) {
         this.annonceRepository = annonceRepository;
         this.utilisateurService =utilisateurService;
         this.validationService =validationService;
@@ -40,6 +41,7 @@ public class AnnonceService {
         this.venteService=venteService;
         this.pourcentageService=pourcentageService;
         this.commissionService=commissionService;
+        this.voitureService=voitureService;
 
     }
 
@@ -110,6 +112,9 @@ public class AnnonceService {
         try {
             String idAnnonce=annonceRepository.getNextValSequence();
             annonce.setIdAnnonce(idAnnonce);
+            Utilisateur u=utilisateurService.getConnected();
+            voitureService.createVoiture(annonce.getVoiture());
+            annonce.setUtilisateur(u);
             return annonceRepository.save(annonce);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
