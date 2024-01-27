@@ -24,9 +24,9 @@ public class Voiture {
     @JoinColumn(name = "id_boite", nullable = false)
     private Boite boite;
     private double consommation;
-    @NotNull(message = "La place est obligatoire")
-    @Column(name = "nb_place", nullable = false)
-    private int Nbplace;
+    @ManyToOne
+    @JoinColumn(name = "id_place", nullable = false)
+    private Place place;
     @ManyToOne
     @JoinColumn(name = "id_porte", nullable = false)
     private Porte porte;
@@ -92,15 +92,13 @@ public class Voiture {
     public void setConsommation(double consommation) {
         this.consommation = consommation;
     }
-
-    public int getNbplace() {
-        return Nbplace;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setNbplace(int nbplace) {
-        Nbplace = nbplace;
+    public void setPlace(Place place) {
+        this.place = place;
     }
-
     public Porte getPorte() {
         return porte;
     }
@@ -137,7 +135,7 @@ public class Voiture {
     }
 
     public Voiture(String idVoiture, Categorie categorie, Marque marque, Modele modele, Energie energie, Boite boite,
-            double consommation, int Nbplace, Porte porte, double kilometrage, Couleur couleur, int etat) {
+            double consommation, Place place, Porte porte, double kilometrage, Couleur couleur, int etat) {
         this.setIdVoiture(idVoiture);
         this.setCategorie(categorie);
         this.setMarque(marque);
@@ -145,7 +143,7 @@ public class Voiture {
         this.setEnergie(energie);
         this.setBoite(boite);
         this.setConsommation(consommation);
-        this.setNbplace(Nbplace);
+        this.setPlace(place);
         this.setPorte(porte);
         this.setKilometrage(kilometrage);
         this.setCouleur(couleur);

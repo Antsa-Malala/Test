@@ -279,7 +279,7 @@ public class AnnonceController {
             @RequestParam(required = false) Integer idModel,
             @RequestParam(required = false) Integer idBoite,
             @RequestParam(required = false) Integer idEnergie,
-            @RequestParam(required = false) Integer nbPlace,
+            @RequestParam(required = false) Integer idPlace,
             @RequestParam(required = false) Integer idPorte,
             @RequestParam(required = false) Integer idCouleur,
             @RequestParam(required = false) Integer idVille,
@@ -291,7 +291,7 @@ public class AnnonceController {
     ) {
         Reponse<List<Annonce>> reponse = new Reponse<>();
         try{
-            List<Annonce> annonces = annonceService.rechercheAvancee(motCle, dateDebut, dateFin, prixMin, prixMax, idCategorie, idMarque, idModel, idBoite, idEnergie, nbPlace, idPorte, idCouleur, idVille, idUtilisateur, kilometrageMin, kilometrageMax, consommationMin, consommationMax);
+            List<Annonce> annonces = annonceService.rechercheAvancee(motCle, dateDebut, dateFin, prixMin, prixMax, idCategorie, idMarque, idModel, idBoite, idEnergie, idPlace, idPorte, idCouleur, idVille, idUtilisateur, kilometrageMin, kilometrageMax, consommationMin, consommationMax);
             if(!annonces.isEmpty()){
                 reponse.setData(annonces);
                 reponse.setRemarque("Annonces trouvees");

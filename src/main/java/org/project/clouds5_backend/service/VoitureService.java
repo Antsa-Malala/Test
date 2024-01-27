@@ -56,13 +56,6 @@ public class VoitureService {
         try{
             String idVoiture=voitureRepository.getNextValSequence();
             voiture.setIdVoiture(idVoiture);
-            Place place = placeRepository.findByValeur(voiture.getNbplace());
-            if(place == null){
-                Place new_place = new Place();
-                new_place.setValeur(voiture.getNbplace());
-                new_place.setEtat(0);
-                placeRepository.save(place);
-            }
             return voitureRepository.save(voiture);
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -79,7 +72,7 @@ public class VoitureService {
             voitureToUpdate.setEnergie(voiture.getEnergie());
             voitureToUpdate.setBoite(voiture.getBoite());
             voitureToUpdate.setConsommation(voiture.getConsommation());
-            voitureToUpdate.setNbplace(voiture.getNbplace());
+            voitureToUpdate.setPlace(voiture.getPlace());
             voitureToUpdate.setPorte(voiture.getPorte());
             voitureToUpdate.setKilometrage(voiture.getKilometrage());
             voitureToUpdate.setCouleur(voiture.getCouleur());

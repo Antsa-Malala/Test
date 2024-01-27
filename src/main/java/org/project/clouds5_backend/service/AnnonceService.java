@@ -34,17 +34,19 @@ public class AnnonceService {
     private final PhotoService photoService;
     private final PourcentageService pourcentageService;
 
-
-    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService,PourcentageService pourcentageService,CommissionService commissionService,VoitureService voitureService,PhotoService photoService) {
+    public AnnonceService(AnnonceRepository annonceRepository, UtilisateurService utilisateurService,
+            ValidationService validationService, RefusService refusService, VenteService venteService,
+            PourcentageService pourcentageService, CommissionService commissionService, VoitureService voitureService,
+            PhotoService photoService) {
         this.annonceRepository = annonceRepository;
-        this.utilisateurService =utilisateurService;
-        this.validationService =validationService;
-        this.refusService =refusService;
-        this.venteService=venteService;
-        this.pourcentageService=pourcentageService;
-        this.commissionService=commissionService;
-        this.voitureService=voitureService;
-        this.photoService=photoService;
+        this.utilisateurService = utilisateurService;
+        this.validationService = validationService;
+        this.refusService = refusService;
+        this.venteService = venteService;
+        this.pourcentageService = pourcentageService;
+        this.commissionService = commissionService;
+        this.voitureService = voitureService;
+        this.photoService = photoService;
 
     }
 
@@ -53,18 +55,16 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
-            for(Annonce a : annonces)
-            {
+            for (Annonce a : annonces) {
                 this.setPhoto(a);
             }
             return annonces;
         }
     }
 
-    public void setPhoto(Annonce a)
-    {
-        List<Photo> liste=photoService.getPhotoByVoiture(a.getVoiture().getIdVoiture());
-        Photo[] sary=new Photo[liste.size()];
+    public void setPhoto(Annonce a) {
+        List<Photo> liste = photoService.getPhotoByVoiture(a.getVoiture().getIdVoiture());
+        Photo[] sary = new Photo[liste.size()];
         a.setPhoto(liste.toArray(sary));
     }
 
@@ -73,8 +73,7 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
-            for(Annonce a : annonces)
-            {
+            for (Annonce a : annonces) {
                 this.setPhoto(a);
             }
             return annonces;
@@ -86,8 +85,7 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
-            for(Annonce a : annonces)
-            {
+            for (Annonce a : annonces) {
                 this.setPhoto(a);
             }
             return annonces;
@@ -99,8 +97,7 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
-            for(Annonce a : annonces)
-            {
+            for (Annonce a : annonces) {
                 this.setPhoto(a);
             }
             return annonces;
@@ -112,8 +109,7 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
-            for(Annonce a : annonces)
-            {
+            for (Annonce a : annonces) {
                 this.setPhoto(a);
             }
             return annonces;
@@ -129,6 +125,7 @@ public class AnnonceService {
             return annonce;
         }
     }
+
     public Annonce getAnnonceByIdFront(String id) {
         Annonce annonce = annonceRepository.findByIdAnnonceAndEtatNot(id, 10);
         if (annonce == null) {
@@ -143,22 +140,22 @@ public class AnnonceService {
     @Transactional
     public Annonce createAnnonce(Annonce annonce) {
         try {
-            String idAnnonce=annonceRepository.getNextValSequence();
+            String idAnnonce = annonceRepository.getNextValSequence();
             annonce.setIdAnnonce(idAnnonce);
             annonce.setDateAnnonce(new Date(System.currentTimeMillis()));
-            Utilisateur u=utilisateurService.getConnected();
-            Voiture vo=annonce.getVoiture();
-            vo.setEtat(0);
+            Utilisateur u = utilisateurService.getConnected();
+            Voiture vo = annonce.getVoiture();
             annonce.setEtat(0);
-            Voiture v=voitureService.createVoiture(vo);
+            Voiture v = voitureService.createVoiture(vo);
             annonce.setUtilisateur(u);
             annonce.setVoiture(v);
-            Annonce a=annonceRepository.save(annonce);
-            List<JsonResponse> ph=new ArrayList<>();
-            for (int i=0;i<annonce.getPhoto().length;i++) {
-                String fileBase64=annonce.getPhoto()[i].getPhoto();
-                ph.add(photoService.uploadOnline(fileBase64,a.getVoiture().getIdVoiture()));
+            Annonce a = annonceRepository.save(annonce);
+            List<JsonResponse> ph = new ArrayList<>();
+            for (int i = 0; i < annonce.getPhoto().length; i++) {
+                String fileBase64 = annonce.getPhoto()[i].getPhoto();
+                ph.add(photoService.uploadOnline(fileBase64, a.getVoiture().getIdVoiture()));
             }
+            this.setPhoto(a);
             return a;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -188,9 +185,10 @@ public class AnnonceService {
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setEtat(20);
-            String idValidation=validationService.getNextValSequence();
-            Utilisateur connecte=utilisateurService.getConnected();
-            Validation a=new Validation(idValidation,new Date(System.currentTimeMillis()),connecte,annonceToUpdate);
+            String idValidation = validationService.getNextValSequence();
+            Utilisateur connecte = utilisateurService.getConnected();
+            Validation a = new Validation(idValidation, new Date(System.currentTimeMillis()), connecte,
+                    annonceToUpdate);
             validationService.createValidation(a);
             annonceRepository.save(annonceToUpdate);
             return annonceToUpdate;
@@ -204,9 +202,9 @@ public class AnnonceService {
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setEtat(10);
-            String idRefus=refusService.getNextValSequence();
-            Utilisateur connecte=utilisateurService.getConnected();
-            Refus a=new Refus(idRefus,new Date(System.currentTimeMillis()),connecte,annonceToUpdate);
+            String idRefus = refusService.getNextValSequence();
+            Utilisateur connecte = utilisateurService.getConnected();
+            Refus a = new Refus(idRefus, new Date(System.currentTimeMillis()), connecte, annonceToUpdate);
             refusService.createRefus(a);
             annonceRepository.save(annonceToUpdate);
             return annonceToUpdate;
@@ -220,13 +218,13 @@ public class AnnonceService {
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setEtat(30);
-            String idVente=venteService.getNextValSequence();
-            Utilisateur connecte=utilisateurService.getConnected();
-            Vente a=new Vente(idVente,annonceToUpdate,new Date(System.currentTimeMillis()));
+            String idVente = venteService.getNextValSequence();
+            Utilisateur connecte = utilisateurService.getConnected();
+            Vente a = new Vente(idVente, annonceToUpdate, new Date(System.currentTimeMillis()));
             venteService.createVente(a);
-            double valeur=pourcentageService.getValeur();
-            double montant=valeur*annonceToUpdate.getPrix()/100;
-            Commission c=new Commission(annonceToUpdate,new Date(System.currentTimeMillis()),montant);
+            double valeur = pourcentageService.getValeur();
+            double montant = valeur * annonceToUpdate.getPrix() / 100;
+            Commission c = new Commission(annonceToUpdate, new Date(System.currentTimeMillis()), montant);
             commissionService.createCommission(c);
             annonceRepository.save(annonceToUpdate);
             return annonceToUpdate;
@@ -234,7 +232,6 @@ public class AnnonceService {
             throw new RuntimeException("Annonce non trouvee");
         }
     }
-
 
     public Annonce deleteAnnonceById(String id) {
         Optional<Annonce> optionalAnnonce = Optional.ofNullable(annonceRepository.findByIdAnnonceAndEtatNot(id, 10));
@@ -267,82 +264,99 @@ public class AnnonceService {
             Double kilometrageMin,
             Double kilometrageMax,
             Double consommationMin,
-            Double consommationMax
-    ) {
+            Double consommationMax) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Annonce> criteriaQuery = criteriaBuilder.createQuery(Annonce.class);
         Root<Annonce> root = criteriaQuery.from(Annonce.class);
 
         List<Predicate> predicates = new ArrayList<>();
-        if(motCle != null && !motCle.isEmpty()) {
+        if (motCle != null && !motCle.isEmpty()) {
             String motCleLower = motCle.toLowerCase();
 
+            Predicate predicate0 = criteriaBuilder.like(criteriaBuilder.lower(root.get("description")),
+                    "%" + motCleLower + "%");
+            Predicate predicate1 = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("voiture").get("modele").get("nomModele")), "%" + motCleLower + "%");
+            Predicate predicate2 = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("voiture").get("modele").get("marque").get("nomMarque")),
+                    "%" + motCleLower + "%");
+            Predicate predicate3 = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("voiture").get("modele").get("categorie").get("nomCategorie")),
+                    "%" + motCleLower + "%");
+            Predicate predicate4 = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("voiture").get("boite").get("nomBoite")), "%" + motCleLower + "%");
+            Predicate predicate5 = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("voiture").get("energie").get("nomEnergie")),
+                    "%" + motCleLower + "%");
+            Predicate predicate6 = criteriaBuilder.like(criteriaBuilder.lower(root.get("utilisateur").get("nom")),
+                    "%" + motCleLower + "%");
+            Predicate predicate7 = criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("voiture").get("couleur").get("nomCouleur")),
+                    "%" + motCleLower + "%");
+            Predicate predicate8 = criteriaBuilder.like(criteriaBuilder.lower(root.get("ville").get("nomVille")),
+                    "%" + motCleLower + "%");
+            Predicate predicate9 = criteriaBuilder.like(criteriaBuilder.lower(root.get("utilisateur").get("prenom")),
+                    "%" + motCleLower + "%");
 
-            Predicate predicate0 = criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + motCleLower + "%");
-            Predicate predicate1 = criteriaBuilder.like(criteriaBuilder.lower(root.get("voiture").get("modele").get("nomModele")), "%" + motCleLower + "%");
-            Predicate predicate2 = criteriaBuilder.like(criteriaBuilder.lower(root.get("voiture").get("modele").get("marque").get("nomMarque")), "%" + motCleLower + "%");
-            Predicate predicate3 = criteriaBuilder.like(criteriaBuilder.lower(root.get("voiture").get("modele").get("categorie").get("nomCategorie")), "%" + motCleLower + "%");
-            Predicate predicate4 = criteriaBuilder.like(criteriaBuilder.lower(root.get("voiture").get("boite").get("nomBoite")), "%" + motCleLower + "%");
-            Predicate predicate5 = criteriaBuilder.like(criteriaBuilder.lower(root.get("voiture").get("energie").get("nomEnergie")), "%" + motCleLower + "%");
-            Predicate predicate6 = criteriaBuilder.like(criteriaBuilder.lower(root.get("utilisateur").get("nom")), "%" + motCleLower + "%");
-            Predicate predicate7 = criteriaBuilder.like(criteriaBuilder.lower(root.get("voiture").get("couleur").get("nomCouleur")), "%" + motCleLower + "%");
-            Predicate predicate8 = criteriaBuilder.like(criteriaBuilder.lower(root.get("ville").get("nomVille")), "%" + motCleLower + "%");
-            Predicate predicate9 = criteriaBuilder.like(criteriaBuilder.lower(root.get("utilisateur").get("prenom")), "%" + motCleLower + "%");
-
-            predicates.add(criteriaBuilder.or(predicate0, predicate1, predicate2, predicate3, predicate4, predicate5, predicate6, predicate7, predicate8, predicate9));
+            predicates.add(criteriaBuilder.or(predicate0, predicate1, predicate2, predicate3, predicate4, predicate5,
+                    predicate6, predicate7, predicate8, predicate9));
         }
-        if(dateDebut != null) {
+        if (dateDebut != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("dateAnnonce"), dateDebut));
         }
-        if(dateFin != null) {
+        if (dateFin != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("dateAnnonce"), dateFin));
         }
-        if(prixMin != null && prixMin != 0) {
+        if (prixMin != null && prixMin != 0) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("prix"), prixMin));
         }
-        if(prixMax != null && prixMax != 0) {
+        if (prixMax != null && prixMax != 0) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("prix"), prixMax));
         }
-        if(categorie != null && categorie != 0) {
-            predicates.add(criteriaBuilder.equal(root.get("voiture").get("modele").get("categorie").get("idCategorie"), categorie));
+        if (categorie != null && categorie != 0) {
+            predicates.add(criteriaBuilder.equal(root.get("voiture").get("modele").get("categorie").get("idCategorie"),
+                    categorie));
         }
-        if(marque != null && marque != 0) {
-            predicates.add(criteriaBuilder.equal(root.get("voiture").get("modele").get("marque").get("idMarque"), marque));
+        if (marque != null && marque != 0) {
+            predicates.add(
+                    criteriaBuilder.equal(root.get("voiture").get("modele").get("marque").get("idMarque"), marque));
         }
-        if(model != null && model != 0) {
+        if (model != null && model != 0) {
             predicates.add(criteriaBuilder.equal(root.get("voiture").get("modele").get("idModele"), model));
         }
-        if(boite != null && boite != 0) {
+        if (boite != null && boite != 0) {
             predicates.add(criteriaBuilder.equal(root.get("voiture").get("boite").get("idBoite"), boite));
         }
-        if(energie != null && energie != 0) {
+        if (energie != null && energie != 0) {
             predicates.add(criteriaBuilder.equal(root.get("voiture").get("energie").get("idEnergie"), energie));
         }
-        if(place != null && place != 0) {
-            predicates.add(criteriaBuilder.equal(root.get("voiture").get("Nbplace"), place));
+        if (place != null && place != 0) {
+            predicates.add(criteriaBuilder.equal(root.get("voiture").get("place").get("idPlace"), place));
         }
-        if(porte != null && porte != 0) {
+        if (porte != null && porte != 0) {
             predicates.add(criteriaBuilder.equal(root.get("voiture").get("porte").get("idPorte"), porte));
         }
-        if(couleur != null && couleur != 0) {
+        if (couleur != null && couleur != 0) {
             predicates.add(criteriaBuilder.equal(root.get("voiture").get("couleur").get("idCouleur"), couleur));
         }
-        if(ville != null && ville != 0) {
+        if (ville != null && ville != 0) {
             predicates.add(criteriaBuilder.equal(root.get("ville").get("idVille"), ville));
         }
-        if(utilisateur != null) {
+        if (utilisateur != null) {
             predicates.add(criteriaBuilder.equal(root.get("utilisateur").get("idUtilisateur"), utilisateur));
         }
-        if(kilometrageMin != null && kilometrageMin != 0) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("voiture").get("kilometrage"), kilometrageMin));
+        if (kilometrageMin != null && kilometrageMin != 0) {
+            predicates
+                    .add(criteriaBuilder.greaterThanOrEqualTo(root.get("voiture").get("kilometrage"), kilometrageMin));
         }
-        if(kilometrageMax != null && kilometrageMax != 0) {
+        if (kilometrageMax != null && kilometrageMax != 0) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("voiture").get("kilometrage"), kilometrageMax));
         }
-        if(consommationMin != null && consommationMin != 0) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("voiture").get("consommation"), consommationMin));
+        if (consommationMin != null && consommationMin != 0) {
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("voiture").get("consommation"), consommationMin));
         }
-        if(consommationMax != null && consommationMax != 0) {
+        if (consommationMax != null && consommationMax != 0) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("voiture").get("consommation"), consommationMax));
         }
         predicates.add(criteriaBuilder.notEqual(root.get("etat"), 10));
@@ -350,13 +364,12 @@ public class AnnonceService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    public List<Annonce> getHistoriqueByUser(Utilisateur utilisateur){
+    public List<Annonce> getHistoriqueByUser(Utilisateur utilisateur) {
         List<Annonce> annonces = annonceRepository.findByUtilisateurOrderByDateAnnonceDesc(utilisateur);
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
-            for(Annonce a : annonces)
-            {
+            for (Annonce a : annonces) {
                 this.setPhoto(a);
             }
             return annonces;
