@@ -24,6 +24,16 @@ public class Annonce {
     @ManyToOne
     @JoinColumn(name = "id_utilisateur", nullable = false)
     private Utilisateur utilisateur;
+    @Transient
+    private Photo[] photo;
+
+    public Photo[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo[] photo) {
+        this.photo = photo;
+    }
 
     public String getIdAnnonce() {
         return idAnnonce;
