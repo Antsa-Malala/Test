@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PourcentageRepository extends JpaRepository<Pourcentage, String> {
 
-    @Query(value = "SELECT valeur FROM pourcentage WHERE date_pourcentage = (SELECT MAX(date_pourcentage) FROM pourcentage);", nativeQuery = true)
+    @Query(value = "SELECT valeur FROM pourcentage WHERE date_pourcentage = (SELECT MAX(date_pourcentage) FROM pourcentage) ORDER BY id_pourcentage desc LIMIT 1;", nativeQuery = true)
     Double getValeur();
 }
