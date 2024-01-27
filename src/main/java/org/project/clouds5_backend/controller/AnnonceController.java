@@ -3,16 +3,16 @@ package org.project.clouds5_backend.controller;
 import jakarta.validation.Valid;
 import org.project.clouds5_backend.model.Annonce;
 import org.project.clouds5_backend.model.Reponse;
-import org.project.clouds5_backend.service.AnnonceService;
-import org.project.clouds5_backend.service.ValidationService;
+import org.project.clouds5_backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.project.clouds5_backend.model.Annonce;
 import org.project.clouds5_backend.model.Reponse;
 import org.project.clouds5_backend.model.Utilisateur;
 import org.project.clouds5_backend.service.AnnonceService;
-import org.project.clouds5_backend.service.UtilisateurService;
 
 import java.sql.Date;
 import java.util.List;
@@ -43,7 +43,7 @@ public class AnnonceController {
                 if (result != null) {
                     reponse.setData(result);
 
-                    return ResponseEntity.status(201).body(reponse);
+                    return ResponseEntity.status(200).body(reponse);
                 } else {
                     reponse.setErreur("Erreur sur la liste des annonces par utilisateur");
                     return ResponseEntity.status(400).body(reponse);

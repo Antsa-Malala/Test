@@ -11,6 +11,8 @@ import org.project.clouds5_backend.repository.AnnonceRepository;
 import org.project.clouds5_backend.service.PourcentageService;
 import org.project.clouds5_backend.repository.ValidationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -29,11 +31,11 @@ public class AnnonceService {
     private final VenteService venteService;
     private final VoitureService voitureService;
     private final CommissionService commissionService;
-
+    private final PhotoService photoService;
     private final PourcentageService pourcentageService;
 
 
-    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService,PourcentageService pourcentageService,CommissionService commissionService,VoitureService voitureService) {
+    public AnnonceService(AnnonceRepository annonceRepository,UtilisateurService utilisateurService,ValidationService validationService,RefusService refusService,VenteService venteService,PourcentageService pourcentageService,CommissionService commissionService,VoitureService voitureService,PhotoService photoService) {
         this.annonceRepository = annonceRepository;
         this.utilisateurService =utilisateurService;
         this.validationService =validationService;
@@ -42,6 +44,7 @@ public class AnnonceService {
         this.pourcentageService=pourcentageService;
         this.commissionService=commissionService;
         this.voitureService=voitureService;
+        this.photoService=photoService;
 
     }
 
@@ -108,14 +111,26 @@ public class AnnonceService {
         }
     }
 
+    @Transactional
     public Annonce createAnnonce(Annonce annonce) {
         try {
             String idAnnonce=annonceRepository.getNextValSequence();
             annonce.setIdAnnonce(idAnnonce);
+            annonce.setDateAnnonce(new Date(System.currentTimeMillis()));
             Utilisateur u=utilisateurService.getConnected();
-            voitureService.createVoiture(annonce.getVoiture());
+            Voiture vo=annonce.getVoiture();
+            vo.setEtat(0);
+            annonce.setEtat(0);
+            Voiture v=voitureService.createVoiture(vo);
             annonce.setUtilisateur(u);
-            return annonceRepository.save(annonce);
+            annonce.setVoiture(v);
+            Annonce a=annonceRepository.save(annonce);
+            List<JsonResponse> ph=new ArrayList<>();
+            for (int i=0;i<annonce.getPhoto().length;i++) {
+                String fileBase64=annonce.getPhoto()[i].getPhoto();
+                ph.add(photoService.uploadOnline(fileBase64,a.getVoiture().getIdVoiture()));
+            }
+            return a;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
