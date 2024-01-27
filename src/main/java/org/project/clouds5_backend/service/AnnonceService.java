@@ -53,8 +53,19 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
+            for(Annonce a : annonces)
+            {
+                this.setPhoto(a);
+            }
             return annonces;
         }
+    }
+
+    public void setPhoto(Annonce a)
+    {
+        List<Photo> liste=photoService.getPhotoByVoiture(a.getVoiture().getIdVoiture());
+        Photo[] sary=new Photo[liste.size()];
+        a.setPhoto(liste.toArray(sary));
     }
 
     public List<Annonce> getAnnonceValidee() {
@@ -62,6 +73,10 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
+            for(Annonce a : annonces)
+            {
+                this.setPhoto(a);
+            }
             return annonces;
         }
     }
@@ -71,6 +86,10 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
+            for(Annonce a : annonces)
+            {
+                this.setPhoto(a);
+            }
             return annonces;
         }
     }
@@ -80,6 +99,10 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
+            for(Annonce a : annonces)
+            {
+                this.setPhoto(a);
+            }
             return annonces;
         }
     }
@@ -89,6 +112,10 @@ public class AnnonceService {
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
+            for(Annonce a : annonces)
+            {
+                this.setPhoto(a);
+            }
             return annonces;
         }
     }
@@ -98,6 +125,7 @@ public class AnnonceService {
         if (annonce == null) {
             return null;
         } else {
+            this.setPhoto(annonce);
             return annonce;
         }
     }
@@ -106,6 +134,7 @@ public class AnnonceService {
         if (annonce == null) {
             return null;
         } else {
+            this.setPhoto(annonce);
             annonce.setUtilisateur(null);
             return annonce;
         }
@@ -322,6 +351,15 @@ public class AnnonceService {
     }
 
     public List<Annonce> getHistoriqueByUser(Utilisateur utilisateur){
-        return annonceRepository.findByUtilisateurOrderByDateAnnonceDesc(utilisateur);
+        List<Annonce> annonces = annonceRepository.findByUtilisateurOrderByDateAnnonceDesc(utilisateur);
+        if (annonces.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            for(Annonce a : annonces)
+            {
+                this.setPhoto(a);
+            }
+            return annonces;
+        }
     }
 }
