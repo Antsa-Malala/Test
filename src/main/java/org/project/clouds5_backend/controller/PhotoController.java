@@ -1,20 +1,14 @@
 package org.project.clouds5_backend.controller;
 
-import jakarta.validation.Valid;
-import org.project.clouds5_backend.model.Categorie;
-import org.project.clouds5_backend.model.Modele;
-import org.project.clouds5_backend.model.Photo;
-import org.project.clouds5_backend.model.Reponse;
-import org.project.clouds5_backend.repository.CategorieRepository;
-import org.project.clouds5_backend.service.CategorieService;
+import org.project.clouds5_backend.model.*;
 import org.project.clouds5_backend.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -60,6 +54,31 @@ public class PhotoController {
                 return ResponseEntity.status(404).body(reponse);
             }
         }catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
+    @PostMapping("/upload/online")
+    public ResponseEntity<Reponse<List<JsonResponse>>> uploadFileOnline(@RequestBody FilesBody files) {
+        Reponse<List<JsonResponse>> reponse = new Reponse<>();
+        System.out.println("bik");
+        try {
+            List<JsonResponse> a=new ArrayList<>();
+            for (String fileBase64 : files.getFiles()) {
+                a.add(photoService.uploadOnline(fileBase64,files.getIdVoiture()));
+            }
+            if(!a.isEmpty()) {
+                reponse.setData(a);
+                reponse.setRemarque("Photo uploadé");
+                return ResponseEntity.status(201).body(reponse);
+            }
+            else{
+                reponse.setErreur("Photo non uploadé");
+                return ResponseEntity.status(400).body(reponse);
+            }
+
+        } catch (Exception e) {
             reponse.setErreur(e.getMessage());
             return ResponseEntity.status(500).body(reponse);
         }

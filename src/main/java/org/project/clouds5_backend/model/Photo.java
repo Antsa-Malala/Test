@@ -9,8 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "photo")
 public class Photo {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPhoto;
-    private byte[] photo;
+    private String photo;
     @Column(name = "id_voiture")
     private String idVoiture;
 
@@ -32,18 +33,18 @@ public class Photo {
         this.idVoiture = idVoiture;
     }
 
-    public byte[] getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    public void setPhoto(byte[] photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
     }
 
     public Photo() {
     }
 
-    public Photo(int idPhoto,String idVoiture, byte[] photo) {
+    public Photo(int idPhoto,String idVoiture, String photo) {
         this.setIdPhoto(idPhoto);
         this.setPhoto(photo);
         this.setIdVoiture(idVoiture);
