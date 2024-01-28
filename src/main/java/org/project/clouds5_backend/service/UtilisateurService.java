@@ -35,7 +35,7 @@ public class UtilisateurService implements UtilisateurServiceInter {
     }
 
     public List<Utilisateur> getAllUtilisateurs() {
-        List<Utilisateur> utilisateur = utilisateurRepository.findByEtatNot(10);
+        List<Utilisateur> utilisateur = utilisateurRepository.findByEtatNotAndRoleNot(10,1);
         if(utilisateur.isEmpty()) {
             return Collections.emptyList();
         }else {
