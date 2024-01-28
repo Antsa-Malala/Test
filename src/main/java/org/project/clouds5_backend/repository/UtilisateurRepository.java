@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, String> {
     Optional<Utilisateur> findByMail(String email);
 
-    List<Utilisateur> findByEtatNot(Integer etat);
     List<Utilisateur> findByEtatNotAndRoleNot(Integer etat,Integer role);
+    List<Utilisateur> findByEtatNot(Integer etat);
     Utilisateur findByIdUtilisateurAndEtatNot(String id, Integer etat);
 
     @Query(value = "select 'USR'||nextval('seq_utilisateur') as id;", nativeQuery = true)
