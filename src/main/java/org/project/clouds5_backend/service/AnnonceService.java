@@ -51,7 +51,7 @@ public class AnnonceService {
     }
 
     public List<Annonce> getAllAnnonces() {
-        List<Annonce> annonces = annonceRepository.findByEtatNot(10);
+        List<Annonce> annonces = annonceRepository.findByEtatNotAndEtatNot(10, 5);
         if (annonces.isEmpty()) {
             return Collections.emptyList();
         } else {
@@ -116,8 +116,20 @@ public class AnnonceService {
         }
     }
 
+    public List<Annonce> getAnnonceAnnulee() {
+        List<Annonce> annonces = annonceRepository.findByEtat(5);
+        if (annonces.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            for (Annonce a : annonces) {
+                this.setPhoto(a);
+            }
+            return annonces;
+        }
+    }
+
     public Annonce getAnnonceById(String id) {
-        Annonce annonce = annonceRepository.findByIdAnnonceAndEtatNot(id, 10);
+        Annonce annonce = annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5);
         if (annonce == null) {
             return null;
         } else {
@@ -127,7 +139,7 @@ public class AnnonceService {
     }
 
     public Annonce getAnnonceByIdFront(String id) {
-        Annonce annonce = annonceRepository.findByIdAnnonceAndEtatNot(id, 10);
+        Annonce annonce = annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5);
         if (annonce == null) {
             return null;
         } else {
@@ -163,7 +175,8 @@ public class AnnonceService {
     }
 
     public Annonce updateAnnonceById(String id, Annonce annonce) {
-        Optional<Annonce> optionalAnnonce = Optional.ofNullable(annonceRepository.findByIdAnnonceAndEtatNot(id, 10));
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5));
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setDateAnnonce(annonce.getDateAnnonce());
@@ -181,7 +194,8 @@ public class AnnonceService {
     }
 
     public Annonce valider(String id) {
-        Optional<Annonce> optionalAnnonce = Optional.ofNullable(annonceRepository.findByIdAnnonceAndEtatNot(id, 10));
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5));
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setEtat(20);
@@ -197,8 +211,35 @@ public class AnnonceService {
         }
     }
 
+    public Annonce annuler(String id) {
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5));
+        if (optionalAnnonce.isPresent()) {
+            Annonce annonceToUpdate = optionalAnnonce.get();
+            annonceToUpdate.setEtat(5);
+            annonceRepository.save(annonceToUpdate);
+            return annonceToUpdate;
+        } else {
+            throw new RuntimeException("Annonce non trouvee");
+        }
+    }
+
+    public Annonce confirmer(String id) {
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtat(id, 5));
+        if (optionalAnnonce.isPresent()) {
+            Annonce annonceToUpdate = optionalAnnonce.get();
+            annonceToUpdate.setEtat(0);
+            annonceRepository.save(annonceToUpdate);
+            return annonceToUpdate;
+        } else {
+            throw new RuntimeException("Annonce non trouvee");
+        }
+    }
+
     public Annonce refuser(String id) {
-        Optional<Annonce> optionalAnnonce = Optional.ofNullable(annonceRepository.findByIdAnnonceAndEtatNot(id, 10));
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5));
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setEtat(10);
@@ -214,7 +255,8 @@ public class AnnonceService {
     }
 
     public Annonce vendre(String id) {
-        Optional<Annonce> optionalAnnonce = Optional.ofNullable(annonceRepository.findByIdAnnonceAndEtatNot(id, 10));
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5));
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToUpdate = optionalAnnonce.get();
             annonceToUpdate.setEtat(30);
@@ -234,7 +276,8 @@ public class AnnonceService {
     }
 
     public Annonce deleteAnnonceById(String id) {
-        Optional<Annonce> optionalAnnonce = Optional.ofNullable(annonceRepository.findByIdAnnonceAndEtatNot(id, 10));
+        Optional<Annonce> optionalAnnonce = Optional
+                .ofNullable(annonceRepository.findByIdAnnonceAndEtatNotAndEtatNot(id, 10, 5));
         if (optionalAnnonce.isPresent()) {
             Annonce annonceToDelete = optionalAnnonce.get();
             annonceToDelete.setEtat(10);
@@ -359,7 +402,7 @@ public class AnnonceService {
         if (consommationMax != null && consommationMax != 0) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("voiture").get("consommation"), consommationMax));
         }
-        predicates.add(criteriaBuilder.notEqual(root.get("etat"), 10));
+        predicates.add(criteriaBuilder.equal(root.get("etat"), 20));
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
         return entityManager.createQuery(criteriaQuery).getResultList();
     }

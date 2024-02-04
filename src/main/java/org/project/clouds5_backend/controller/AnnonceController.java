@@ -23,22 +23,22 @@ public class AnnonceController {
     private final AnnonceService annonceService;
 
     private final ValidationService validationService;
-    private  final UtilisateurService utilisateurService;
+    private final UtilisateurService utilisateurService;
 
     @Autowired
-    public AnnonceController(AnnonceService annonceService,ValidationService validationService,UtilisateurService utilisateurService) {
+    public AnnonceController(AnnonceService annonceService, ValidationService validationService,
+            UtilisateurService utilisateurService) {
         this.annonceService = annonceService;
         this.validationService = validationService;
         this.utilisateurService = utilisateurService;
     }
-
 
     @GetMapping("/utilisateur/{id}")
     public ResponseEntity<Reponse<List<Annonce>>> getAnnonceByUser(@PathVariable String id) {
         Reponse<List<Annonce>> reponse = new Reponse<>();
         try {
             Utilisateur utilisateur = utilisateurService.getUtilisateurById(id);
-            if(utilisateur != null){
+            if (utilisateur != null) {
                 List<Annonce> result = annonceService.getHistoriqueByUser(utilisateur);
                 if (result != null) {
                     reponse.setData(result);
@@ -48,7 +48,7 @@ public class AnnonceController {
                     reponse.setErreur("Erreur sur la liste des annonces par utilisateur");
                     return ResponseEntity.status(400).body(reponse);
                 }
-            }else  {
+            } else {
                 reponse.setErreur("User not found");
                 return ResponseEntity.status(400).body(reponse);
             }
@@ -115,6 +115,25 @@ public class AnnonceController {
         }
     }
 
+    @GetMapping("/annonces/annulees")
+    public ResponseEntity<Reponse<List<Annonce>>> getAnnonceAnnulees() {
+        Reponse<List<Annonce>> reponse = new Reponse<>();
+        try {
+            List<Annonce> annonces = annonceService.getAnnonceAnnulee();
+            if (!annonces.isEmpty()) {
+                reponse.setData(annonces);
+                reponse.setRemarque("Liste des annonces annulees");
+                return ResponseEntity.ok().body(reponse);
+            } else {
+                reponse.setErreur("Liste vide");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Reponse<Annonce>> getAnnonceById(@PathVariable String id) {
         Reponse<Annonce> reponse = new Reponse<>();
@@ -133,6 +152,7 @@ public class AnnonceController {
             return ResponseEntity.status(500).body(reponse);
         }
     }
+
     @GetMapping("/front/{id}")
     public ResponseEntity<Reponse<Annonce>> getAnnonceByIdFront(@PathVariable String id) {
         Reponse<Annonce> reponse = new Reponse<>();
@@ -199,6 +219,44 @@ public class AnnonceController {
             if (annonce1 != null) {
                 reponse.setData(annonce1);
                 reponse.setRemarque("Annonce validee");
+                return ResponseEntity.ok().body(reponse);
+            } else {
+                reponse.setErreur("Annonce non trouvee");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
+    @PutMapping("/annuler/{id}")
+    public ResponseEntity<Reponse<Annonce>> annuler(@PathVariable String id) {
+        Reponse<Annonce> reponse = new Reponse<>();
+        try {
+            Annonce annonce1 = annonceService.annuler(id);
+            if (annonce1 != null) {
+                reponse.setData(annonce1);
+                reponse.setRemarque("Annonce annulée");
+                return ResponseEntity.ok().body(reponse);
+            } else {
+                reponse.setErreur("Annonce non trouvee");
+                return ResponseEntity.status(404).body(reponse);
+            }
+        } catch (Exception e) {
+            reponse.setErreur(e.getMessage());
+            return ResponseEntity.status(500).body(reponse);
+        }
+    }
+
+    @PutMapping("/confirmer/{id}")
+    public ResponseEntity<Reponse<Annonce>> confirmer(@PathVariable String id) {
+        Reponse<Annonce> reponse = new Reponse<>();
+        try {
+            Annonce annonce1 = annonceService.confirmer(id);
+            if (annonce1 != null) {
+                reponse.setData(annonce1);
+                reponse.setRemarque("Annonce confirmé");
                 return ResponseEntity.ok().body(reponse);
             } else {
                 reponse.setErreur("Annonce non trouvee");
@@ -287,20 +345,21 @@ public class AnnonceController {
             @RequestParam(required = false) Double kilometrageMin,
             @RequestParam(required = false) Double kilometrageMax,
             @RequestParam(required = false) Double consommationMin,
-            @RequestParam(required = false) Double consommationMax
-    ) {
+            @RequestParam(required = false) Double consommationMax) {
         Reponse<List<Annonce>> reponse = new Reponse<>();
-        try{
-            List<Annonce> annonces = annonceService.rechercheAvancee(motCle, dateDebut, dateFin, prixMin, prixMax, idCategorie, idMarque, idModel, idBoite, idEnergie, idPlace, idPorte, idCouleur, idVille, idUtilisateur, kilometrageMin, kilometrageMax, consommationMin, consommationMax);
-            if(!annonces.isEmpty()){
+        try {
+            List<Annonce> annonces = annonceService.rechercheAvancee(motCle, dateDebut, dateFin, prixMin, prixMax,
+                    idCategorie, idMarque, idModel, idBoite, idEnergie, idPlace, idPorte, idCouleur, idVille,
+                    idUtilisateur, kilometrageMin, kilometrageMax, consommationMin, consommationMax);
+            if (!annonces.isEmpty()) {
                 reponse.setData(annonces);
                 reponse.setRemarque("Annonces trouvees");
                 return ResponseEntity.ok().body(reponse);
-            }else{
+            } else {
                 reponse.setErreur("Aucune annonce trouvee");
                 return ResponseEntity.status(404).body(reponse);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             reponse.setErreur(e.getMessage());
             return ResponseEntity.status(500).body(reponse);
         }
