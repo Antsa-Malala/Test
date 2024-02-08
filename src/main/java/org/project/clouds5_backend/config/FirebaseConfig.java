@@ -19,12 +19,15 @@ public class FirebaseConfig {
         Resource resource = new ClassPathResource("privateKey/adminsdk.json");
         FileInputStream serviceAccount = new FileInputStream(resource.getFile());
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://<DATABASE_NAME>.firebaseio.com/")
+                    .build();
 
-        FirebaseApp app = FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options);
+        }
 
-        return FirebaseMessaging.getInstance(app);
+        return FirebaseMessaging.getInstance();
     }
 }
