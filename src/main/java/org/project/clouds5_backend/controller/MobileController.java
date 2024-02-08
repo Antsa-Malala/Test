@@ -32,7 +32,7 @@ public class MobileController {
             }
         } catch (Exception e){
             valiny.setErreur(e.getMessage());
-            return ResponseEntity.status(500).body(valiny);
+            return ResponseEntity.status(200).body(valiny);
         }
     }
 }

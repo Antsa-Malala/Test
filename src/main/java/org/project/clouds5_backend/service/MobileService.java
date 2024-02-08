@@ -22,7 +22,7 @@ public class MobileService {
                 return mobileRepository.save(mobile);
             }
             else{
-                throw new Exception("Token deja present");
+                return null;
             }
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
