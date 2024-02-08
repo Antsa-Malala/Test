@@ -2,6 +2,7 @@ package org.project.clouds5_backend.service;
 
 import org.project.clouds5_backend.model.Favoris;
 import org.project.clouds5_backend.model.Annonce;
+import org.project.clouds5_backend.model.Photo;
 import org.project.clouds5_backend.repository.FavorisRepository;
 import org.springframework.stereotype.Service;
 import org.project.clouds5_backend.model.Utilisateur;
@@ -11,9 +12,11 @@ import java.util.Optional;
 @Service
 public class FavorisService {
     private final FavorisRepository favorisRepository;
+    private final PhotoService photoService;
 
-    public FavorisService(FavorisRepository favorisRepository) {
+    public FavorisService(FavorisRepository favorisRepository, PhotoService photoService) {
         this.favorisRepository = favorisRepository;
+        this.photoService=photoService;
     }
 
     public List<Favoris> getAllFavoris() {
@@ -66,6 +69,20 @@ public class FavorisService {
     }
 
     public List<Favoris> getFavorisByUser(Utilisateur utilisateur){
-        return favorisRepository.findByUtilisateur(utilisateur);
+        List<Favoris> lf= favorisRepository.findByUtilisateur(utilisateur);
+        if (lf.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            for (Favoris f : lf) {
+                this.setPhoto(f.getAnnonce());
+            }
+            return lf;
+        }
+    }
+
+    public void setPhoto(Annonce a) {
+        List<Photo> liste = photoService.getPhotoByVoiture(a.getVoiture().getIdVoiture());
+        Photo[] sary = new Photo[liste.size()];
+        a.setPhoto(liste.toArray(sary));
     }
 }
