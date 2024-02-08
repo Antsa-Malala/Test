@@ -9,5 +9,6 @@ import java.util.List;
 
 @Document(collection = "mobileToken")
 public interface MobileRepository extends MongoRepository<Mobile, String> {
-
+    @Query("{'idUtilisateur': ?0, 'token': ?1}")
+    Mobile findByIdutilisateurAndToken(String idUtilisateur, String token);
 }

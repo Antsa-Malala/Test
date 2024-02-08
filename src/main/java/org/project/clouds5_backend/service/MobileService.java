@@ -17,7 +17,25 @@ public class MobileService {
     //    Insert message
     public Mobile insert(Mobile mobile) throws Exception{
         try{
-            return mobileRepository.save(mobile);
+            if(this.check(mobile))
+            {
+                return mobileRepository.save(mobile);
+            }
+            else{
+                throw new Exception("Token deja present");
+            }
+        }catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public boolean check(Mobile mobile) throws Exception{
+        try{
+            if(mobileRepository.findByIdutilisateurAndToken(mobile.getIdUtilisateur(), mobile.getToken())!=null)
+            {
+                return false;
+            }
+            return true;
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
