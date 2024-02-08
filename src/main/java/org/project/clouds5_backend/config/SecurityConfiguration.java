@@ -28,7 +28,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**","/annonces/front/{id}","/annonces/valide","/annonces/search","/categories/**","/couleurs/**","/energies/**","/marques/**","/modeles/**","/places/**","/portes/**","/villes/**")
+                        .requestMatchers("/auth/**","/annonces/front/{id}","/annonces/valide","/annonces/search","/categories/**","/couleurs/**","/energies/**","/marques/**","/modeles/**","/places/**","/portes/**","/villes/**","/boites/**")
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
