@@ -404,7 +404,15 @@ public class AnnonceService {
         }
         predicates.add(criteriaBuilder.equal(root.get("etat"), 20));
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        List<Annonce> annonces= entityManager.createQuery(criteriaQuery).getResultList();
+        if (annonces.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            for (Annonce a : annonces) {
+                this.setPhoto(a);
+            }
+            return annonces;
+        }
     }
 
     public List<Annonce> getHistoriqueByUser(Utilisateur utilisateur) {

@@ -28,7 +28,7 @@ public class MobileController {
             }
             else{
                 valiny.setErreur("Token mobile non inseree");
-                return ResponseEntity.status(404).body(valiny);
+                return ResponseEntity.status(200).body(valiny);
             }
         } catch (Exception e){
             valiny.setErreur(e.getMessage());

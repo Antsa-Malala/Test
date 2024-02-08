@@ -22,7 +22,6 @@ public class FirebaseConfig {
     private String firebaseConfigPath;
     @Bean
     public FirebaseMessaging firebaseMessaging() throws IOException {
-        Resource resource = new ClassPathResource(firebaseConfigPath);
         InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
 
         if (FirebaseApp.getApps().isEmpty()) {
