@@ -16,7 +16,8 @@ import java.io.IOException;
 public class FirebaseConfig {
     @Bean
     public FirebaseMessaging firebaseMessaging() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream("");
+        Resource resource = new ClassPathResource("privateKey/adminsdk.json");
+        FileInputStream serviceAccount = new FileInputStream(resource.getFile());
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
