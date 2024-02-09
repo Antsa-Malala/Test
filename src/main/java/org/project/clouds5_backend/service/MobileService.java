@@ -1,9 +1,13 @@
 package org.project.clouds5_backend.service;
 
+import org.project.clouds5_backend.model.Message;
 import org.project.clouds5_backend.model.Mobile;
 import org.project.clouds5_backend.repository.MessageRepository;
 import org.project.clouds5_backend.repository.MobileRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 
 @Service
@@ -31,13 +35,24 @@ public class MobileService {
 
     public boolean check(Mobile mobile) throws Exception{
         try{
-            if(mobileRepository.findByIdutilisateurAndToken(mobile.getIdUtilisateur(), mobile.getToken())!=null)
+            if(mobileRepository.findByIdUtilisateurAndToken(mobile.getIdUtilisateur(), mobile.getToken())!=null)
             {
                 return false;
             }
             return true;
         }catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<Mobile> getAllToken(String idUser1){
+        List<Mobile> mobiles = mobileRepository.findByIdUtilisateur(idUser1);
+        if(mobiles.isEmpty())
+        {
+            return Collections.emptyList();
+        }
+        else{
+            return mobiles;
         }
     }
 }
