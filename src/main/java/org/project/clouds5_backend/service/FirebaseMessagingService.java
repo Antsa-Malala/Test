@@ -28,7 +28,6 @@ public class FirebaseMessagingService {
                 .builder()
                 .setToken(notificationMessage.getRecipientToken())
                 .setNotification(notification)
-                .putAllData(notificationMessage.getData())
                 .build();
     System.out.println(message+"huhu");
         return firebaseMessaging.send(message);

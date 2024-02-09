@@ -1,5 +1,6 @@
 package org.project.clouds5_backend.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.project.clouds5_backend.model.*;
 import org.project.clouds5_backend.repository.MessageRepository;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class MessageService {
         }
     }
     //    Insert message
-    public Message insert(Message message) throws Exception{
+    public Message insert(Message message) throws FirebaseMessagingException,Exception {
         try{
             Inbox inbox = inboxService.saveLastMessage(message);
             List<Mobile> ms=mobileService.getAllToken(message.getIdUtilisateur2());
