@@ -14,13 +14,16 @@ public class MessageService {
 
     private InboxService inboxService;
     private MobileService mobileService;
-    private FirebaseMessagingService firebaseMessagingService;;
+    private FirebaseMessagingService firebaseMessagingService;
 
-    public MessageService(MessageRepository messageRepository, InboxService inboxService,MobileService mobileService,FirebaseMessagingService firebaseMessagingService) {
+    private UtilisateurService utilisateurService;
+
+    public MessageService(MessageRepository messageRepository, InboxService inboxService,MobileService mobileService,FirebaseMessagingService firebaseMessagingService,UtilisateurService utilisateurService) {
         this.messageRepository = messageRepository;
         this.inboxService = inboxService;
         this.mobileService=mobileService;
-        this.firebaseMessagingService=firebaseMessagingService;;
+        this.firebaseMessagingService=firebaseMessagingService;
+        this.utilisateurService=utilisateurService;
     }
 
     //  Read message
@@ -39,10 +42,11 @@ public class MessageService {
         try{
             Inbox inbox = inboxService.saveLastMessage(message);
             List<Mobile> ms=mobileService.getAllToken(message.getIdUtilisateur2());
+            Utilisateur u=utilisateurService.getUtilisateurById(message.getIdUtilisateur2());
             System.out.println(message.getIdUtilisateur2()+" "+ms.size()+"zany ary");
             for(Mobile m : ms)
             {
-                firebaseMessagingService.sendNotification(new NotificationMessage(m.getToken(),"Un nouveau message","Vous avez un nouveau message."));
+                firebaseMessagingService.sendNotification(new NotificationMessage(m.getToken(),u.getNom().concat(" "+u.getPrenom()),"Vous avez un nouveau message."));
                 System.out.println(m.getToken()+"ok lasa");
             }
             return messageRepository.insert(message);
